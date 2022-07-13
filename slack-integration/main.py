@@ -17,6 +17,9 @@ app = Flask(__name__)
 
 
 def node_pool_start(project_id,location,cluster_name,node_pools):
+    #this functio is to scale up the node pools
+    #It will first enable the auto scalling at the node pool
+    #second it will resize the node pool from zero to default value 
     for pool in node_pools:
         node_pool_name = pool['name']
         print("name:" ,node_pool_name)
@@ -29,6 +32,9 @@ def node_pool_start(project_id,location,cluster_name,node_pools):
     return
 
 def node_pool_stop(project_id,location,cluster_name,node_pools):
+    #this functio is to scale up the node pools
+    #It will first enable the auto scalling at the node pool
+    #second it will resize the node pool from zero to default value
     for pool in node_pools:
         node_pool_name = pool['name']
         print("name:" ,node_pool_name)
@@ -39,7 +45,7 @@ def node_pool_stop(project_id,location,cluster_name,node_pools):
     return
 
 def get_node_pool_list(project_id,command,cluster_name,location):
-
+    #This function is to get the name of the node pools available in the cluster which we want to scale up or down
     parent = f'projects/{project_id}/locations/{location}/clusters/{cluster_name}'
     request = service.projects().locations().clusters().nodePools().list(parent=parent)
     response = request.execute()
@@ -48,7 +54,9 @@ def get_node_pool_list(project_id,command,cluster_name,location):
         print("performing start")
         msg= {"text":f"Start operation is in progress for {cluster_name} cluster"}   
         msg_data = str(msg)
+        #the aboe message will be posted to the slack channel using the webhook url which we will copy from slack bot basic information page
         requests.post('', headers=headers, data=msg_data)
+        #To post the mesaage at slack channel the webhook url should be place in above request function.
         node_pool_start(project_id,location,cluster_name,node_pools)
         message=f"Node-polls for {cluster_name} cluster started"
         return message
@@ -57,13 +65,18 @@ def get_node_pool_list(project_id,command,cluster_name,location):
         print("performing stop")
         msg= {"text":f"Stop operation is in progress for {cluster_name} cluster"}   
         msg_data = str(msg)
+        #the aboe message will be posted to the slack channel using the webhook url which we will copy from slack bot basic information page
         requests.post('', headers=headers, data=msg_data)
+        #To post the mesaage at slack channel the webhook url should be place in above request function.
         node_pool_stop(project_id,location,cluster_name,node_pools)
         message = f"Node-polls for {cluster_name} cluster stopped"
         return message
 
 @app.route("/", methods=['POST'])
 def main():
+    #this function is the entry point of the post request send through the slack bot
+    #Only those slack bot request will be accepted whose token value matches (already stored in secret manager)
+    #Also from a particular channel.
     data=request.form
     secret_token=os.environ['slack_token']
     if secret_token==request.form['token']:
