@@ -48,7 +48,7 @@ def get_node_pool_list(project_id,command,cluster_name,location):
         print("performing start")
         msg= {"text":f"Start operation is in progress for {cluster_name} cluster"}   
         msg_data = str(msg)
-        requests.post('https://hooks.slack.com/services/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', headers=headers, data=msg_data)
+        requests.post('', headers=headers, data=msg_data)
         node_pool_start(project_id,location,cluster_name,node_pools)
         message=f"Node-polls for {cluster_name} cluster started"
         return message
@@ -57,7 +57,7 @@ def get_node_pool_list(project_id,command,cluster_name,location):
         print("performing stop")
         msg= {"text":f"Stop operation is in progress for {cluster_name} cluster"}   
         msg_data = str(msg)
-        requests.post('https://hooks.slack.com/services/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', headers=headers, data=msg_data)
+        requests.post('', headers=headers, data=msg_data)
         node_pool_stop(project_id,location,cluster_name,node_pools)
         message = f"Node-polls for {cluster_name} cluster stopped"
         return message
