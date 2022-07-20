@@ -3,6 +3,8 @@
 This module makes it easy to create the GKE Private Cluster for the GCP Network.
 ​
 - GKE Private Cluster
+
+- Node Pool
 ​
 ## Usage
 Basic usage of this module is as follows:
